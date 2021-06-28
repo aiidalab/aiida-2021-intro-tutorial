@@ -10,7 +10,7 @@ aiida-lsmo~=1.0
 aiida-nanotech-empa~=0.2
 aiida-optimize~=0.4
 aiida-qeq~=1.0.0a1
-aiida-quantumespresso~=3.4
+aiida-quantumespresso==3.4.2
 aiida-raspa~=1.2
 aiida-tbmodels~=0.3
 aiida-vasp~=2.1
