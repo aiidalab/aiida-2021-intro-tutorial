@@ -60,30 +60,29 @@ jobs:
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-  deploy-demo-develop:
+  deploy-on-cluster:
 
     needs: [build-docker-image]
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/main'
 
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:
-      name: demo-develop
-      url: https://demo-develop.aiidalab.net
+      name: 2021-intro-tutorial
+      url: https://aiida-intro-tutorial-2021.aiidalab.net
     env:
-      RELEASE: aiidalab-demo-develop
-      aiidalab_factory_reset: "2"
+      RELEASE: aiidalab
+      aiidalab_factory_reset: ""
       contact_email: simon.adorf@epfl.ch
+      https_enabled: true
       image_name: ${{ github.repository }}
       image_tag: ${{ needs.build-docker-image.outputs.tag }}
-      jh_host: demo-develop.aiidalab.net
-      oauth_client_id: "ec9145436c332e45df0a"
+      jh_host: aiida-intro-tutorial-2021.aiidalab.net
+      namespace: default
+      oauth_client_id: "59364403beecf7a643c9"
       oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
       secret_token: ${{ secrets.SECRET_TOKEN }}
 
-      # Apps to install by default:
-      awb_app_version: "develop"
-      qe_app_version: "develop"
 
     steps:
       -
@@ -117,4 +116,9 @@ jobs:
           helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
           helm repo update
           touch kubeconfig && chmod 600 kubeconfig && echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-          KUBECONFIG="kubeconfig" helm upgrade "${RELEASE}" jupyterhub/jupyterhub --version=0.11.1 --values config.yaml --cleanup-on-fail
+          KUBECONFIG="kubeconfig" helm upgrade "${RELEASE}" \
+            jupyterhub/jupyterhub --version=0.11.1 \
+            --install \
+            --values config.yaml \
+            --cleanup-on-fail \
+            --namespace="${namespace}" \

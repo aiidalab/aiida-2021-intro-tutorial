@@ -1,7 +1,7 @@
 proxy:
     secretToken: "{{ secret_token }}"
     https:
-      enabled: true
+      enabled: {{ https_enabled | default(false) }}
       hosts:
         - "{{ jh_host }}"
       letsencrypt:
@@ -41,9 +41,10 @@ hub:
       oauth_callback_url: "https://{{ jh_host }}/hub/oauth_callback"
       allowed_organizations:
         - aiidalab
-        - materialscloud-org
+        - aiidateam
       admin_users:
         - csadorf
+        - mbercx
         - yakutovicha
       scope:
         - read:user
