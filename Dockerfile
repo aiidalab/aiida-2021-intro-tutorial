@@ -5,7 +5,7 @@ USER root
 
 # Install simulation engines.
 RUN conda install --yes -c conda-forge \
-  qe==6.7.0 \
+  qe==6.6.0 \
   cp2k=8.2.0 \
   && conda clean --all
 
